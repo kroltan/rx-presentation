@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/theme/black.css">
+    <link rel="stylesheet" href="base.css" />
+    <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
+</head>
+<body class="reveal">
+    <button>Adicionar à lista</button>
+    <div id="content"></div>
+
+    <script>
+        const {
+            BehaviorSubject,
+            fromEvent,
+            operators: {
+                map,
+                withLatestFrom,
+            }
+        } = rxjs;
+
+        /* begin */
+        const button = document.querySelector("button");
+        const content = document.getElementById("content");
+
+        const list$ = new BehaviorSubject([]);
+        const number$ = fromEvent(button, "click")
+            .pipe(map(() => Math.round(Math.random() * 10)));
+
+        number$
+            .pipe(
+                withLatestFrom(list$),
+                map(([number, list]) => [...list, number])
+            )
+            .subscribe(list$);
+
+        list$.subscribe(items => {
+            content.innerText = items.join(", ");
+        });
+    </script>
+</body>
+</html>

@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+		<title>"Programação Funcional Reativa: O que é, e pra que serve?" por Leonardo Giovanni Scur</title>
 
 		<link rel="stylesheet" href="css/reset.css">
 		<link rel="stylesheet" href="css/reveal.css">
@@ -12,6 +12,13 @@
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/monokai.css">
+
+		<style>
+			code {
+				tab-size: 4;
+				-moz-tab-size: 4;
+			}
+		</style>
 
 		<!-- Printing and PDF exports -->
 		<script>
@@ -25,8 +32,275 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+				<section>
+					<section>
+						<h1>Programação Funcional Reativa</h1>
+						<h2>O que é, e pra que serve?</h2>
+						<p>por Leonardo Giovanni Scur</p>
+					</section>
+					<section>
+						<ul>
+							<li>Não é palavrão</li>
+							<li>Não é de comer</li>
+						</ul>
+					</section>
+					<section>
+						É uma paradigma de programação onde todos os valores são manipulados
+						dentre sequências que podem ter respeito ao tempo.
+					</section>
+					<section>
+						<p>
+							Isso se dá a um código que é escrito como alguém descreveria o funcionamento do programa:
+						</p>
+						<ul>
+							<li>"Quando o botão for clicado, coloque um novo item na lista"</li>
+							<li>"Cada vez que a pontuação mudar por mais de 10 pontos, o contador deve pular"</li>
+						</ul>
+					</section>
+					<section>
+						<div data-autosnippet>
+							<pre><code></code></pre>
+							<iframe src="examples/add-to-list.html"></iframe>
+						</div>
+					</section>
+				</section>
+				<section>
+					<h2>Fundamentos</h2>
+					<ul>
+						<li>Programação Funcional</li>
+						<li>Conceito de tempo</li>
+						<li>Mônadas</li>
+					</ul>
+				</section>
+				<section>
+					<section>
+						<h3>Programação Funcional</h3>
+						<ul>
+							<li>Comportamento Puro</li>
+							<li>Imutabilidade</li>
+							<li>Funções como Valores</li>
+							<li>Composição</li>
+						</ul>
+					</section>
+					<section>
+						<h4>Comportamento Puro</h4>
+						É dito "puro" um trecho de código em que dada a mesma entrada,
+						terá a mesma saída, e nenhum efeito colateral pode ser observado.
+						<!--
+							bate no highlight.js, não é minha culpa essa formatação feiosa.
+							custa recortar espaços iniciais? python que é legal nesse caso:
+							https://docs.python.org/3/library/textwrap.html#textwrap.dedent
+						-->
+						<pre><code class="hljs js" data-trim>
+// uma função pura:
+const square = (x) => x * x;
+
+// e uma impura:
+const random = () => Math.random();
+						</code></pre>
+					</section>
+					<section>
+						<h4>Imutabilidade</h4>
+						Uma vez em mãos de um valor, nunca será possível observar uma mudança
+						no mesmo devido a qualquer trecho de código.
+						<pre><code class="hljs js" data-trim>
+// imutável
+const push = (array, value) => array.concat([value]);
+
+// mutável
+const push = (array, value) => {
+	array.push(value);
+	return array;
+};
+						</code></pre>
+					</section>
+					<section>
+						<h4>Funções como Valores</h4>
+						<p>Valores que você encontra no caminho da padaria:</p>
+						<ul>
+							<li>Números</li>
+							<li>Texto</li>
+							<li>Booleanos</li>
+							<li>Estruturas (classes e similares)</li>
+						</ul>
+					</section>
+					<section>
+						<h4>Funções como Valores (cont.)</h4>
+						<p>Mas o que é um valor? Um valor pode...</p>
+						<ul>
+							<li>Ser colocado em uma variável</li>
+							<li>Ser passado como parâmetro para uma função</li>
+							<li>Ter operadores aplicados a ele</li>
+						</ul>
+					</section>
+					<section>
+						<h4>Composição</h4>
+						Pequenos fundamentos que podem ser combinados para formar comportamentos complexos.
+						<pre><code class="hljs js" data-trim>
+// usando essas funções genéricas:
+
+const sumBy = (items, selector) =>
+	items
+	.map(selector)
+	.aggregate((total, value) => total + value);
+
+const averageBy = (items, selector) =>
+	sumBy(items, selector) / items.length;</code></pre>
+					</section>
+					<section>
+						<h4>Composição (cont.)</h4>
+						<pre><code class="hljs js">// podemos descobrir a idade média da base de usuários:
+const averageAge = (users) =>
+	averageBy(users, user => user.age);
+
+// ou saber quais alunos tem notas melhores que a média.
+const findUsersAboveAverage = (users) => {
+	const average = averageBy(users, user => user.score);
+	return users.filter(user => user.score > average);
+};
+							</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h3>Conceito de Tempo</h3>
+						<ul>
+							<li>O que é tempo?</li>
+							<li>Onde o tempo é relevante?</li>
+							<li>Porém...</li>
+						</ul>
+					</section>
+					<section>
+						<h4>O que é tempo?</h4>
+						<p>
+							Tempo sempre avança, mas não é quantificável, apenas sequenciável:
+							você sabe que algo pode acontecer antes ou depois, mas não <em>quando</em>.
+						</p>
+						<aside class="notes">
+							Programação funcional não reconhece a existência do tempo,
+							enquanto a programação reativa depende dele.
+						</aside>
+					</section>
+					<section>
+						<h4>Onde o tempo é relevante?</h4>
+						<ul>
+							<li>Um programa é executado a partir de um evento, ou uma <em>sequência</em> de eventos.</li>
+							<li>Estes eventos podem acontecer todos imediatamente, ou em momentos diferentes.</li>
+						</ul>
+					</section>
+					<section>
+						<h4>Porém...</h4>
+						<p>
+							Nem todo código precisa se preocupar em quando ele é executado, apenas a
+							sequência dos seus passos seja a desejada para chegar no destino.
+						</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h3>Mônadas</h3>
+						<ul>
+							<li>O que sâo mônadas?</li>
+							<li>Em termos de implementação</li>
+							<li>Exemplo: Promessas</li>
+						</ul>
+					</section>
+					<section>
+						<h4>O que são mônadas?</h4>
+						<ol>
+							<li>Uma mônada é um valor empacotado, onde este pacote dá um significado maior para o valor</li>
+							<li class="fragment">Você pode operar no valor empacotado, o resultado também empacotado</li>
+							<li class="fragment">O pacote controla a interação com seu valor</li>
+							<li class="fragment">Tentar violar o pacote é desencorajado</li>
+						</ol>
+					</section>
+					<section>
+						<h4>Em termos de implementação</h4>
+						<aside class="notes">
+							A função que recebe a operação a aplicar ao valor geralmente é chamada de <code>bind</code>
+						</aside>
+						<pre><code class="hljs js" data-trim>
+const Identity = (value) => ({
+	_value: value,
+
+	bind(operation) {
+		return operation(this._value);
+	}
+});
+						</code></pre>
+					</section>
+					<section>
+						<h4>Exemplo: Promessas</h4>
+						<aside class="notes">
+							Acredito que a maioria de vocês está familiarizado com promessas em JS!
+
+							Simplificando pois tratamento de erros precisaria de mais mônadas.
+						</aside>
+						<p>Uma mônada que representa um valor futuro!</p>
+						<ol>
+							<li>A promessa eventualmente é respondida com um valor</li>
+							<li class="fragment">Você pode acessar esse valor com <code>Promise#then</code></li>
+							<li class="fragment">Se você chamar <code>then</code> antes de resolver, a função só será chamada depois</li>
+							<li class="fragment">É difícil sinalizar um código que não use promessas que uma promessa resolveu</li>
+						</ol>
+					</section>
+					<section>
+						<h4>BONUS: Como implementar a mônada <code>Promise</code>!</h4>
+						<p>Sem tratamento de erros, pois erros podem ser mônadas também!</p>
+						<pre><code class="hljs js" data-trim>
+const Promise = perform => {
+	// Guardaremos todo mundo que chamar `then` aqui.
+	const callbacks = [];
+
+	// O objeto da promessa em si é bem limpo!
+	// O único estado necessário fica escondido no
+	// contexto deste construtor.
+	const promise = {
+		then(callback) {
+			// Quando alguém se inscreve, apenas adicionamos
+			// a resolução da promessa resultante à lista
+			// de callbacks.
+			return Promise(resolve => {
+				callbacks.push(resolve);
+			});
+		}
+	};
+
+	// A função passada ao `perform` deve ser chamada quando
+	// a promessa for concluída.
+	perform(value => {
+		// Quando a promessa for resolvida, avisamos todos
+		// os inscritos.
+		for (const callback of callbacks) {
+			callback(value);
+		}
+	});
+
+	return promise;
+};
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<h3>Referências</h3>
+					<ul>
+						<li>
+							<a href="https://stackoverflow.com/a/1030631/1045510">
+								<em>What is (functional) reactive programming?</em>, por Conal Elliot
+							</a>
+						</li>
+						<li>
+							<a href="https://curiosity-driven.org/monads-in-javascript">
+								<em>Monads in JavaScript</em>, por Curiosity Driven
+							</a>
+						</li>
+						<li>
+							<a href="http://reactivex.io/">
+								Conjunto de bibliotecas ReactiveX
+							</a>
+						</li>
+					</ul>
+				</section>
 			</div>
 		</div>
 
@@ -37,11 +311,17 @@
 			// - https://github.com/hakimel/reveal.js#configuration
 			// - https://github.com/hakimel/reveal.js#dependencies
 			Reveal.initialize({
+				hash: true,
+				history: true,
+				controls: false,
 				dependencies: [
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },
 					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true }
+					{ src: 'plugin/autosnippet/autosnippet.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true },
+                    { src: 'socket.io/socket.io.js', async: true },
+                    { src: 'plugin/notes-server/client.js', async: true }
 				]
 			});
 		</script>
