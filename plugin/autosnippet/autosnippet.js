@@ -38,8 +38,11 @@ for (const wrapper of document.querySelectorAll("[data-autosnippet]")) {
             .replace(/^(?:.|\n)*\/\* begin \*\/\n?/, "")
             .replace(/\n?\/\* end \*\/(?:.|\n)*$/, "");
 
-        console.log(clean);
         code.innerText = clean;
+
+        if (wrapper.dataset["autosnippet"] === "code-only") {
+            frame.remove();
+        }
 
         if (window["hljs"]) {
             code.classList.add("hljs");

@@ -33,6 +33,11 @@
 			code .token {
 				color: inherit;
 			}
+
+			::selection {
+				color: black;
+				background: white;
+			}
 		</style>
 
 		<!-- Printing and PDF exports -->
@@ -239,7 +244,7 @@ const Identity = (value) => ({
 	_value: value,
 
 	bind(operation) {
-		return operation(this._value);
+		return Identity(operation(this._value));
 	}
 });
 						</code></pre>
@@ -260,7 +265,7 @@ const Identity = (value) => ({
 						</ol>
 					</section>
 					<section>
-						<h4>BONUS: Como implementar a mônada <code>Promise</code>!</h4>
+						<h4>Como implementar a mônada <code>Promise</code>!</h4>
 						<p>Sem tratamento de erros, pois erros podem ser mônadas também!</p>
 						<div data-autosnippet>
 							<pre><code></code></pre>
@@ -271,6 +276,25 @@ const Identity = (value) => ({
 				<section>
 					<section>
 						<h3>ReactiveX</h3>
+						<p>Trazendo a PFR para sua linguagem favorita:</p>
+						<ul>
+							<li>18 linguagens oficialmente suportadas</li>
+							<li>Paridade de features em todas elas</li>
+							<li>Cede aos padrões da linguagem quando possível</li>
+							<li>Especializações para ambientes específicos</li>
+						</ul>
+					</section>
+					<section>
+						<h3>TODO-RX</h3>
+						<iframe class="stretch" src="examples/todo-rx.html"></iframe>
+					</section>
+					<section>
+						<h3>TODO-RX</h3>
+						<p>Implementando React</p>
+						<div data-autosnippet="code-only">
+							<pre><code></code></pre>
+							<iframe src="examples/todo-rx.html"></iframe>
+						</div>
 					</section>
 				</section>
 				<section>
