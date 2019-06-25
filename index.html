@@ -11,12 +11,27 @@
 		<link rel="stylesheet" href="css/theme/black.css">
 
 		<!-- Theme used for syntax highlighting of code -->
-		<link rel="stylesheet" href="lib/css/monokai.css">
+		<link rel="stylesheet" href="lib/css/atom-one-dark-reasonable.css">
+		<link rel="stylesheet" href="lib/css/prism.css">
 
 		<style>
+			pre  {
+				width: unset !important;
+			}
+
 			code {
+				max-height: 400px !important;
+
+				color: #eee !important;
+
 				tab-size: 4;
 				-moz-tab-size: 4;
+				font-size: 1.75rem !important;
+				line-height: 1.2 !important;
+			}
+
+			code .token {
+				color: inherit;
 			}
 		</style>
 
@@ -91,7 +106,7 @@
 							custa recortar espaços iniciais? python que é legal nesse caso:
 							https://docs.python.org/3/library/textwrap.html#textwrap.dedent
 						-->
-						<pre><code class="hljs js" data-trim>
+						<pre><code class="language-js" data-trim>
 // uma função pura:
 const square = (x) => x * x;
 
@@ -103,7 +118,7 @@ const random = () => Math.random();
 						<h4>Imutabilidade</h4>
 						Uma vez em mãos de um valor, nunca será possível observar uma mudança
 						no mesmo devido a qualquer trecho de código.
-						<pre><code class="hljs js" data-trim>
+						<pre><code class="language-js" data-trim>
 // imutável
 const push = (array, value) => array.concat([value]);
 
@@ -136,7 +151,7 @@ const push = (array, value) => {
 					<section>
 						<h4>Composição</h4>
 						Pequenos fundamentos que podem ser combinados para formar comportamentos complexos.
-						<pre><code class="hljs js" data-trim>
+						<pre><code class="language-js" data-trim>
 // usando essas funções genéricas:
 
 const sumBy = (items, selector) =>
@@ -149,7 +164,7 @@ const averageBy = (items, selector) =>
 					</section>
 					<section>
 						<h4>Composição (cont.)</h4>
-						<pre><code class="hljs js">// podemos descobrir a idade média da base de usuários:
+						<pre><code class="language-js">// podemos descobrir a idade média da base de usuários:
 const averageAge = (users) =>
 	averageBy(users, user => user.age);
 
@@ -219,7 +234,7 @@ const findUsersAboveAverage = (users) => {
 						<aside class="notes">
 							A função que recebe a operação a aplicar ao valor geralmente é chamada de <code>bind</code>
 						</aside>
-						<pre><code class="hljs js" data-trim>
+						<pre><code class="language-js" data-trim>
 const Identity = (value) => ({
 	_value: value,
 
@@ -247,38 +262,15 @@ const Identity = (value) => ({
 					<section>
 						<h4>BONUS: Como implementar a mônada <code>Promise</code>!</h4>
 						<p>Sem tratamento de erros, pois erros podem ser mônadas também!</p>
-						<pre><code class="hljs js" data-trim>
-const Promise = perform => {
-	// Guardaremos todo mundo que chamar `then` aqui.
-	const callbacks = [];
-
-	// O objeto da promessa em si é bem limpo!
-	// O único estado necessário fica escondido no
-	// contexto deste construtor.
-	const promise = {
-		then(callback) {
-			// Quando alguém se inscreve, apenas adicionamos
-			// a resolução da promessa resultante à lista
-			// de callbacks.
-			return Promise(resolve => {
-				callbacks.push(resolve);
-			});
-		}
-	};
-
-	// A função passada ao `perform` deve ser chamada quando
-	// a promessa for concluída.
-	perform(value => {
-		// Quando a promessa for resolvida, avisamos todos
-		// os inscritos.
-		for (const callback of callbacks) {
-			callback(value);
-		}
-	});
-
-	return promise;
-};
-						</code></pre>
+						<div data-autosnippet>
+							<pre><code></code></pre>
+							<iframe src="examples/promise.html"></iframe>
+						</div>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h3>ReactiveX</h3>
 					</section>
 				</section>
 				<section>
@@ -305,6 +297,7 @@ const Promise = perform => {
 		</div>
 
 		<script src="js/reveal.js"></script>
+		<script src="lib/js/prism.js"></script>
 
 		<script>
 			// More info about config & dependencies:
@@ -319,7 +312,6 @@ const Promise = perform => {
 					{ src: 'plugin/markdown/markdown.js' },
 					{ src: 'plugin/notes/notes.js', async: true },
 					{ src: 'plugin/autosnippet/autosnippet.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true },
                     { src: 'socket.io/socket.io.js', async: true },
                     { src: 'plugin/notes-server/client.js', async: true }
 				]

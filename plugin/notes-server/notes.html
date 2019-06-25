@@ -8,7 +8,7 @@
 		<style>
 			body {
 				font-family: Helvetica;
-				font-size: 18px;
+				font-size: 36px;
 			}
 
 			#current-slide,
@@ -68,12 +68,19 @@
 			/* Speaker controls */
 			#speaker-controls {
 				position: absolute;
+				display: flex;
+				flex-direction: column;
 				top: 40%;
 				right: 0;
 				width: 40%;
 				height: 60%;
 				overflow: auto;
 				font-size: 18px;
+			}
+
+			#speaker-controls button {
+				padding: 1em;
+				font-size: 1em;
 			}
 
 				.speaker-controls-time.hidden,
@@ -134,7 +141,6 @@
 				.speaker-controls-notes .value {
 					margin-top: 5px;
 					line-height: 1.4;
-					font-size: 1.2em;
 				}
 
 			/* Layout selector */
@@ -259,6 +265,8 @@
 				</div>
 				<div class="clear"></div>
 			</div>
+
+			<button>Next Slide</button>
 
 			<div class="speaker-controls-notes hidden">
 				<h4 class="label">Notes</h4>
@@ -423,6 +431,9 @@
 
 				notes = document.querySelector( '.speaker-controls-notes' );
 				notesValue = document.querySelector( '.speaker-controls-notes .value' );
+				document.querySelector('#speaker-controls button').addEventListener("click", function () {
+					socket.emit("next")
+				});
 
 			}
 

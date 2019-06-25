@@ -50,6 +50,10 @@
 		Reveal.setState( data.state );
 	} );
 
+	socket.on('next', function () {
+		Reveal.next();
+	});
+
 	// Monitor events that trigger a change in state
 	Reveal.addEventListener( 'slidechanged', post );
 	Reveal.addEventListener( 'fragmentshown', post );

@@ -31,9 +31,13 @@ io.on( 'connection', function( socket ) {
 		socket.broadcast.emit( 'statechanged-speaker', data );
 	});
 
+	socket.on('next', function () {
+		socket.broadcast.emit('next');
+	})
+
 });
 
-[ 'css', 'js', 'images', 'plugin', 'lib' ].forEach( function( dir ) {
+[ 'css', 'js', 'images', 'plugin', 'lib', 'examples' ].forEach( function( dir ) {
 	app.use( '/' + dir, staticDir( opts.baseDir + dir ) );
 });
 

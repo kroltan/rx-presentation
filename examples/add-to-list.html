@@ -20,12 +20,12 @@
             }
         } = rxjs;
 
-        /* begin */
-        const button = document.querySelector("button");
-        const content = document.getElementById("content");
+        const BUTTON = document.querySelector("button");
+        const CONTENT = document.getElementById("content");
 
+        /* begin */
         const list$ = new BehaviorSubject([]);
-        const number$ = fromEvent(button, "click")
+        const number$ = fromEvent(BUTTON, "click")
             .pipe(map(() => Math.round(Math.random() * 10)));
 
         number$
@@ -36,7 +36,7 @@
             .subscribe(list$);
 
         list$.subscribe(items => {
-            content.innerText = items.join(", ");
+            CONTENT.innerText = items.join(", ");
         });
     </script>
 </body>

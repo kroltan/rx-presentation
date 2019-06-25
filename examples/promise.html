@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/theme/black.css">
+    <link rel="stylesheet" href="base.css" />
+    <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
+</head>
+<body class="reveal">
+    <script>
+        const Promise = perform => {
+            // Guardaremos todo mundo que chamar `then` aqui.
+            const callbacks = [];
+
+            // O objeto da promessa em si é bem limpo!
+            // O único estado necessário fica escondido no
+            // contexto deste construtor.
+            const promise = {
+                then(callback) {
+                    // Quando alguém se inscreve, apenas adicionamos
+                    // a resolução da promessa resultante à lista
+                    // de callbacks.
+                    return Promise(resolve => {
+                        callbacks.push(resolve);
+                    });
+                }
+            };
+
+            // A função passada ao `perform` deve ser chamada quando
+            // a promessa for concluída.
+            perform(value => {
+                // Quando a promessa for resolvida, avisamos todos
+                // os inscritos.
+                for (const callback of callbacks) {
+                    callback(value);
+                }
+            });
+
+            return promise;
+        };
+    </script>
+</body>
+</html>
