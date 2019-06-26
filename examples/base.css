@@ -2,15 +2,22 @@ html, body {
     margin: 0;
     padding: 0;
     background: transparent;
+
+    overflow: visible;
 }
 
 button {
     border: 0;
     padding: 1rem;
+    margin: 1rem;
     border-radius: 100vw;
     font-size: 2rem;
 
     color: black;
     background-color: white;
     cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.5;
 }

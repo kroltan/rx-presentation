@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../css/theme/black.css">
+    <link rel="stylesheet" href="../base.css" />
+    <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
+
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 400px;
+        }
+
+        #cookie {
+            padding: 0;
+            margin: 0;
+            border: none;
+
+            background: none;
+        }
+
+        .factory {
+            display: flex;
+            align-items: center;
+        }
+
+        .store {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+    </style>
+</head>
+<body class="reveal">
+    <div class="counter">
+        Biscoitos:
+        <span id="cookie-counter"></span>
+        Dinheiro:
+        <span id="money-counter"></span>
+        Autoclique:
+        <span id="auto-counter"></span>
+    </div>
+
+    <div class="factory">
+        <button id="cookie">
+            <img src="cookie.png" />
+        </button>
+
+        <button id="sell">Vender Biscoitos</button>
+    </div>
+
+    <div class="store">
+        <button id="auto1">Autoclique ($20): +1 biscoitos a cada segundo</button>
+        <button id="auto2">Auto-autoclique ($50): +1 autoclique a cada 10 segundos</button>
+    </div>
+
+    <script>
+        (() => {
+            const {
+                BehaviorSubject,
+                fromEvent,
+                interval,
+                operators: {
+                    mapTo,
+                    take,
+                    withLatestFrom,
+                    tap,
+                }
+            } = rxjs;
+
+            /* begin */
+            const AUTO1_PRICE = 20;
+            const AUTO2_PRICE = 50;
+
+            const cookie$ = new BehaviorSubject(0);
+            const money$ = new BehaviorSubject(0);
+            const autoCount$ = new BehaviorSubject(0);
+            const autoIncrement$ = new BehaviorSubject(0);
+            const tick$ = interval(1000);
+
+            const cookieButton = document.getElementById("cookie");
+            const sellButton = document.getElementById("sell");
+            const cookieCounter = document.getElementById("cookie-counter");
+            const moneyCounter = document.getElementById("money-counter");
+            const autoCounter = document.getElementById("auto-counter");
+            const auto1Button = document.getElementById("auto1");
+            const auto2Button = document.getElementById("auto2");
+
+            const changeCounterBy = score$ => delta =>
+                score$
+                    .pipe(take(1))
+                    .subscribe(score => score$.next(score + delta));
+
+            const trade = (source$, target$, cost = 1) => sold => {
+                changeCounterBy(source$)(-sold * cost);
+                changeCounterBy(target$)(sold);
+            };
+
+            const atTick = stream$ => tick$
+                .pipe(withLatestFrom(stream$, (_, value) => value));
+
+            fromEvent(cookieButton, "click")
+                .pipe(mapTo(1))
+                .subscribe(changeCounterBy(cookie$));
+
+            fromEvent(sellButton, "click")
+                .pipe(withLatestFrom(cookie$, (_, cookies) => cookies))
+                .subscribe(trade(cookie$, money$));
+
+            fromEvent(auto1Button, "click")
+                .pipe(mapTo(1))
+                .subscribe(trade(money$, autoCount$, AUTO1_PRICE));
+
+            fromEvent(auto2Button, "click")
+                .pipe(mapTo(1))
+                .subscribe(trade(money$, autoIncrement$, AUTO2_PRICE));
+
+            autoCount$
+                .pipe(atTick)
+                .subscribe(changeCounterBy(cookie$));
+
+            autoIncrement$
+                .pipe(atTick)
+                .subscribe(changeCounterBy(autoCount$));
+
+            tick$.subscribe(console.log.bind(console, "Tick"));
+
+
+            // Conecta os valores dos observáveis à tela
+
+            const writeCounter = counter =>
+                value => counter.innerText = value.toString();
+            const enableIfGreater = (button, limit) =>
+                value => button.disabled = value < limit;
+
+            cookie$.subscribe(writeCounter(cookieCounter));
+            cookie$.subscribe(enableIfGreater(sellButton, 1));
+
+            money$.subscribe(writeCounter(moneyCounter));
+            money$.subscribe(enableIfGreater(auto1Button, AUTO1_PRICE));
+            money$.subscribe(enableIfGreater(auto2Button, AUTO2_PRICE));
+
+            autoCount$.subscribe(writeCounter(autoCounter));
+            /* end */
+        })();
+    </script>
+</body>
+</html>

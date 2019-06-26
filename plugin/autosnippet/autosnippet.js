@@ -10,7 +10,9 @@ for (const wrapper of document.querySelectorAll("[data-autosnippet]")) {
     const code = wrapper.querySelector("code");
 
     frame.addEventListener("load", () => {
-        const source = frame.contentWindow.document.querySelector("script:not([src])").innerText;
+        const source = frame.contentWindow.document.querySelector("script:not([src])").innerText
+            .replace(/^(?:.|\n)*\/\* begin \*\/\n?/, "")
+            .replace(/\n?\/\* end \*\/(?:.|\n)*$/, "");
 
         const lines = source
             .split("\n")
@@ -34,9 +36,7 @@ for (const wrapper of document.querySelectorAll("[data-autosnippet]")) {
             .map(line => line.substring(spaceCount))
             .join("\n");
 
-        const clean = formatted
-            .replace(/^(?:.|\n)*\/\* begin \*\/\n?/, "")
-            .replace(/\n?\/\* end \*\/(?:.|\n)*$/, "");
+        const clean = formatted;
 
         code.innerText = clean;
 

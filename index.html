@@ -17,9 +17,11 @@
 		<style>
 			pre  {
 				width: unset !important;
+				margin-left: -5rem !important;
+				margin-right: -5rem !important;
 			}
 
-			code {
+			pre code {
 				max-height: 400px !important;
 
 				color: #eee !important;
@@ -37,6 +39,11 @@
 			::selection {
 				color: black;
 				background: white;
+			}
+
+			[data-autosnippet] iframe {
+				width: 100%;
+				min-height: 160px;
 			}
 		</style>
 
@@ -282,18 +289,67 @@ const Identity = (value) => ({
 							<li>Paridade de features em todas elas</li>
 							<li>Cede aos padrões da linguagem quando possível</li>
 							<li>Especializações para ambientes específicos</li>
+							<li>Preguiçoso, só executa código se há alguém observando</li>
 						</ul>
 					</section>
 					<section>
-						<h3>TODO-RX</h3>
-						<iframe class="stretch" src="examples/todo-rx.html"></iframe>
+						<h4>Elementos básicos</h4>
+						<p>Você pode pensar sobre ReactiveX usando a analogia de encanamento:</p>
+						<ul>
+							<li>Entradas, chamadas de <code>Observer</code></li>
+							<li>Saídas, chamadas de <code>Observable</code></li>
+							<li>Junções, chamadas de <code>Subject</code></li>
+						</ul>
 					</section>
 					<section>
-						<h3>TODO-RX</h3>
-						<p>Implementando React</p>
+						<h5>Observer</h5>
+						<p>
+							Interface que pode ser utilizada para intermediar comunicação com partes não reativas do sistema.
+						</p>
+						<ul>
+							<li><code>next</code>: Um novo item está disponível na sequência</li>
+							<li><code>complete</code>: A sequência não produzirá mais nenhum valor</li>
+							<li><code>error</code>: A sequência terminou com erro</li>
+						</ul>
+					</section>
+					<section>
+						<h5>Observable</h5>
+						<p>Classe representando uma sequência de valores. Tem uma interface bem simples:</p>
+						<ul>
+							<li><code>subscribe</code>: Chamar com um <code>Observer</code> como parâmetro para receber os valores desse fluxo</li>
+							<li><code>pipe</code>: Conveniência para linguagem:</li>
+						</ul>
+						<pre><code class="language-js" data-trim>
+observable.pipe(functionA, functionB, functionC)
+
+// equivalente a
+functionC(functionB(functionA(observable)))
+						</code></pre>
+					</section>
+					<section>
+						<h5>Subject</h5>
+						<p>A combinação de um <code>Observer</code> e <code>Observable</code></p>
+						<ul>
+							<li>Implementa ambas interfaces</li>
+							<li>Materializa inscrições, reduzindo execução duplicada</li>
+							<li class="fragment">
+								Possui algumas variantes bem úteis:
+								<ul>
+									<li><code>BehaviorSubject</code>: Funciona como uma "variável observável", permitindo leitura síncrona</li>
+									<li><code>ReplaySubject</code>: Lembra de todos os valores que já teve, e quem se inscreve recebe todos</li>
+								</ul>
+							</li>
+						</ul>
+					</section>
+					<section>
+						<h3>"Cookie Clicker" em RXJS</h3>
+						<iframe class="stretch" data-src="examples/rx-clicker/index.html"></iframe>
+					</section>
+					<section>
+						<h3>"Cookie Clicker" em RXJS</h3>
 						<div data-autosnippet="code-only">
 							<pre><code></code></pre>
-							<iframe src="examples/todo-rx.html"></iframe>
+							<iframe src="examples/rx-clicker/index.html"></iframe>
 						</div>
 					</section>
 				</section>
@@ -301,21 +357,39 @@ const Identity = (value) => ({
 					<h3>Referências</h3>
 					<ul>
 						<li>
-							<a href="https://stackoverflow.com/a/1030631/1045510">
+							<a href="https://stackoverflow.com/a/1030631/1045510" target="_blank">
 								<em>What is (functional) reactive programming?</em>, por Conal Elliot
 							</a>
 						</li>
 						<li>
-							<a href="https://curiosity-driven.org/monads-in-javascript">
+							<a href="https://curiosity-driven.org/monads-in-javascript" target="_blank">
 								<em>Monads in JavaScript</em>, por Curiosity Driven
 							</a>
 						</li>
 						<li>
-							<a href="http://reactivex.io/">
+							<a href="http://reactivex.io/" target="_blank">
 								Conjunto de bibliotecas ReactiveX
 							</a>
 						</li>
+						<li>
+							<a href="https://www.reactiflux.com/" target="_blank">
+								Canal #rx-js da comunidade Reactiflux
+							</a>
+						</li>
 					</ul>
+				</section>
+				<section>
+					<h3>Obrigado!</h3>
+					<p>Favor preencher avaliação</p>
+					<a href="https://kroltan.typeform.com/to/cvDSeP" target="_blank">
+						<img src="css/feedback.png" height="300" />
+					</a>
+					<p>
+						Slides disponíveis em
+						<a href="https://kroltan.me/talk/dotknows-rx" target="_blank">
+							kroltan.me/talk/dotknows-rx
+						</a>
+					</p>
 				</section>
 			</div>
 		</div>
