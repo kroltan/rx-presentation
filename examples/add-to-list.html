@@ -18,11 +18,11 @@
 
     <script>
         const {
-            BehaviorSubject,
             fromEvent,
+            combineLatest,
             operators: {
                 map,
-                withLatestFrom,
+                scan,
             }
         } = rxjs;
 
@@ -30,20 +30,18 @@
         const CONTENT = document.getElementById("content");
 
         /* begin */
-        const list$ = new BehaviorSubject([]);
-        const number$ = fromEvent(BUTTON, "click")
-            .pipe(map(() => Math.round(Math.random() * 10)));
+        const list$ = fromEvent(BUTTON, "click").pipe(
+            map(() => Math.round(Math.random() * 10)),
+            scan((list, n) => [...list, n], [])
+        );
 
-        number$
-            .pipe(
-                withLatestFrom(list$),
-                map(([number, list]) => [...list, number])
-            )
-            .subscribe(list$);
+        const total$ = list$
+            .pipe(map(list => list.reduce((a, b) => a + b)));
 
-        list$.subscribe(items => {
-            CONTENT.innerText = items.join(", ");
-        });
+        combineLatest(list$, total$)
+            .subscribe(([list, total]) => {
+                CONTENT.innerText = `${list.join(", ")} (Total ${total})`;
+            });
     </script>
 </body>
 </html>

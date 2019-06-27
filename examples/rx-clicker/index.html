@@ -55,7 +55,7 @@
 
     <div class="store">
         <button id="auto1">Autoclique ($20): +1 biscoitos a cada segundo</button>
-        <button id="auto2">Auto-autoclique ($50): +1 autoclique a cada 10 segundos</button>
+        <button id="auto2">Auto-autoclique ($50): +1 autoclique a cada 5 segundos</button>
     </div>
 
     <script>
@@ -68,13 +68,14 @@
                     mapTo,
                     take,
                     withLatestFrom,
-                    tap,
+                    filter,
                 }
             } = rxjs;
 
             /* begin */
             const AUTO1_PRICE = 20;
             const AUTO2_PRICE = 50;
+            const AUTO2_INTERVAL = 5;
 
             const cookie$ = new BehaviorSubject(0);
             const money$ = new BehaviorSubject(0);
@@ -124,7 +125,10 @@
                 .subscribe(changeCounterBy(cookie$));
 
             autoIncrement$
-                .pipe(atTick)
+                .pipe(
+                    atTick,
+                    filter((_, i) => i % AUTO2_INTERVAL === 0)
+                )
                 .subscribe(changeCounterBy(autoCount$));
 
             tick$.subscribe(console.log.bind(console, "Tick"));

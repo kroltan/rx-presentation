@@ -122,8 +122,9 @@
 // uma função pura:
 const square = (x) => x * x;
 
-// e uma impura:
+// e duas impuras:
 const random = () => Math.random();
+const log = (x) => console.log(x);
 						</code></pre>
 					</section>
 					<section>
@@ -143,7 +144,7 @@ const push = (array, value) => {
 					</section>
 					<section>
 						<h4>Funções como Valores</h4>
-						<p>Valores que você encontra no caminho da padaria:</p>
+						<p>Valores que você encontra ordinariamente:</p>
 						<ul>
 							<li>Números</li>
 							<li>Texto</li>
@@ -268,7 +269,7 @@ const Identity = (value) => ({
 							<li>A promessa eventualmente é respondida com um valor</li>
 							<li class="fragment">Você pode acessar esse valor com <code>Promise#then</code></li>
 							<li class="fragment">Se você chamar <code>then</code> antes de resolver, a função só será chamada depois</li>
-							<li class="fragment">É difícil sinalizar um código que não use promessas que uma promessa resolveu</li>
+							<li class="fragment">É difícil sinalizar a um código que não use promessas que uma promessa resolveu</li>
 						</ol>
 					</section>
 					<section>
@@ -364,6 +365,11 @@ functionC(functionB(functionA(observable)))
 						<li>
 							<a href="https://curiosity-driven.org/monads-in-javascript" target="_blank">
 								<em>Monads in JavaScript</em>, por Curiosity Driven
+							</a>
+						</li>
+						<li>
+							<a href="https://fr.umio.us/favoring-curry/">
+								<em>Favoring Curry</em> por Scott Sauyet
 							</a>
 						</li>
 						<li>
