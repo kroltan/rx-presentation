@@ -7,8 +7,16 @@
 </head>
 <body class="reveal">
     <script>
+        /**
+         * Mônada que representa um valor que estará disponível no futuro.
+         *
+         * Observe que este não é um construtor no sentido JS, apenas uma função.
+         *
+         * @template T
+         * @param {function(resolve: function(T): void): void} perform
+         * */
         const Promise = perform => {
-            // Guardaremos todo mundo que chamar `then` aqui.
+            // Guardaremos todos que chamarem `then` aqui.
             const callbacks = [];
 
             // O objeto da promessa em si é bem limpo!
@@ -20,7 +28,7 @@
                     // a resolução da promessa resultante à lista
                     // de callbacks.
                     return Promise(resolve => {
-                        callbacks.push(resolve);
+                        callbacks.push(value => resolve(callback(value)));
                     });
                 }
             };
@@ -28,11 +36,16 @@
             // A função passada ao `perform` deve ser chamada quando
             // a promessa for concluída.
             perform(value => {
-                // Quando a promessa for resolvida, avisamos todos
-                // os inscritos.
-                for (const callback of callbacks) {
-                    callback(value);
-                }
+                // Precisamos aguardar até a pilha de invocação ser liberada
+                // pois senão os callbacks serão chamados antes de qualquer
+                // código ter sequer chance de registrar um callback.
+                setTimeout(() => {
+                    // Quando a promessa for resolvida, avisamos todos
+                    // os inscritos.
+                    for (const callback of callbacks) {
+                        callback(value);
+                    }
+                })
             });
 
             return promise;
